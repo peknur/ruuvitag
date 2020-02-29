@@ -3,18 +3,16 @@ package main
 import (
 	"log"
 	"os"
-	"time"
 
 	"github.com/peknur/ruuvitag"
 )
 
-var logger = log.New(os.Stderr, "", log.LstdFlags)
-
 func main() {
-
+	var logger = log.New(os.Stdout, "", log.LstdFlags)
 	output := make(chan ruuvitag.Measurement, 10)
-	output, err := ruuvitag.Scan()
+	err := ruuvitag.Scan(output)
 	if err != nil {
+		close(output)
 		logger.Fatal(err)
 	}
 	for {
@@ -24,6 +22,5 @@ func main() {
 			break
 		}
 		logger.Printf("%s %d.%dc / %d %%", data.DeviceID, data.Temperature, data.TemperatureFraction, data.Humidity/2)
-		time.Sleep(1 * time.Second)
 	}
 }

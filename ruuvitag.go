@@ -82,17 +82,15 @@ func scanDevice(device gatt.Device, output chan Measurement) {
 	})
 }
 
-// Scan starts scanning with default values
-func Scan() (chan Measurement, error) {
+// Scan starts scanning with default options
+func Scan(output chan Measurement) error {
 	device, err := gatt.NewDevice([]gatt.Option{
 		gatt.LnxMaxConnections(1),
 		gatt.LnxDeviceID(-1, true),
 	}...)
-	output := make(chan Measurement, 10)
 	if err != nil {
-		close(output)
-		return output, err
+		return err
 	}
 	go scanDevice(device, output)
-	return output, nil
+	return nil
 }
