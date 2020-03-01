@@ -21,7 +21,7 @@ func isRuuviDevice(data []byte) bool {
 	return binary.LittleEndian.Uint16(data[0:2]) == manufacturerDataID
 }
 
-// Measurement represents RuuviTag sensor data
+// Measurement represents RuuviTag sensor readings
 type Measurement struct {
 	DeviceID            string
 	Format              uint8
