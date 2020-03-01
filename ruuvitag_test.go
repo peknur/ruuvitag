@@ -15,12 +15,24 @@ func TestDataFormat3(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	m := dataFormat3("", data)
+	m, err := NewMeasurement("", data)
+	if err != nil {
+		t.Fatal(err)
+	}
 	if m.Pressure != 52766 {
 		t.Errorf("m.Pressure = %d; want 52766", m.Pressure)
 	}
 	if m.Temperature != 26 {
 		t.Errorf("m.Temperature = %d; want 26", m.Temperature)
+	}
+	if m.TemperatureFraction != 30 {
+		t.Errorf("m.TemperatureFctorure = %d; want 30", m.TemperatureFraction)
+	}
+	if m.Humidity != 41 {
+		t.Errorf("m.Humidity = %d; want 41", m.Humidity)
+	}
+	if m.BatteryVoltage != 2899 {
+		t.Errorf("m.Humidity = %d; want 2899", m.BatteryVoltage)
 	}
 }
 

@@ -55,8 +55,12 @@ func dataFormat3(ID string, data []byte) Measurement {
 
 // NewMeasurement creates Measurement from ble manufacturer data
 func NewMeasurement(ID string, data []byte) (Measurement, error) {
+	// switch data format
 	switch data[2] {
 	case 3:
+		if len(data) != 16 {
+			return Measurement{}, fmt.Errorf("manufacturer data lenght mismatch")
+		}
 		return dataFormat3(ID, data), nil
 	}
 	return Measurement{}, fmt.Errorf("format '%d' if not supported", data[2])
