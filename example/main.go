@@ -21,6 +21,6 @@ func main() {
 			logger.Println("scanner closed channel")
 			break
 		}
-		logger.Printf("%s %d.%dc / %d %%", data.DeviceID, data.Temperature, data.TemperatureFraction, data.Humidity/2)
+		logger.Printf("%s %.2f / %.2f %%", data.DeviceID(), data.Temperature(), data.Humidity())
 	}
 }

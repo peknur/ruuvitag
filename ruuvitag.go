@@ -12,6 +12,20 @@ import (
 
 var manufacturerDataID uint16 = 0x0499
 
+// Measurement represents RuuviTag sensor readings
+type Measurement interface {
+	DeviceID() string
+	Format() uint8
+	Humidity() float64
+	Temperature() float64
+	Pressure() uint32
+	AccelerationX() float64
+	AccelerationY() float64
+	AccelerationZ() float64
+	BatteryVoltage() float64
+	Timestamp() time.Time
+}
+
 func init() {
 	// Discard log message from gatt module
 	log.SetOutput(ioutil.Discard)
@@ -21,49 +35,14 @@ func isRuuviDevice(data []byte) bool {
 	return binary.LittleEndian.Uint16(data[0:2]) == manufacturerDataID
 }
 
-// Measurement represents RuuviTag sensor readings
-type Measurement struct {
-	DeviceID            string
-	Format              uint8
-	Humidity            uint8
-	Temperature         int8
-	TemperatureFraction uint8
-	Pressure            uint16
-	AccelerationX       int16
-	AccelerationY       int16
-	AccelerationZ       int16
-	BatteryVoltage      uint16
-	Timestamp           time.Time
-}
-
-// Data format 3 https://github.com/ruuvi/ruuvi-sensor-protocols/blob/master/broadcast_formats.md
-func dataFormat3(ID string, data []byte) Measurement {
-	return Measurement{
-		DeviceID:            ID,
-		Format:              data[2],
-		Humidity:            uint8(data[3]),
-		Temperature:         int8(data[4]),
-		TemperatureFraction: uint8(data[5]),
-		Pressure:            uint16(binary.BigEndian.Uint16(data[6:8])),
-		AccelerationX:       int16(binary.BigEndian.Uint16(data[8:10])),
-		AccelerationY:       int16(binary.BigEndian.Uint16(data[10:12])),
-		AccelerationZ:       int16(binary.BigEndian.Uint16(data[12:14])),
-		BatteryVoltage:      uint16(binary.BigEndian.Uint16(data[14:16])),
-		Timestamp:           time.Now(),
-	}
-}
-
 // NewMeasurement creates Measurement from ble manufacturer data
 func NewMeasurement(ID string, data []byte) (Measurement, error) {
 	// switch data format
 	switch data[2] {
 	case 3:
-		if len(data) != 16 {
-			return Measurement{}, fmt.Errorf("manufacturer data lenght mismatch")
-		}
-		return dataFormat3(ID, data), nil
+		return newDataFormat3(ID, data)
 	}
-	return Measurement{}, fmt.Errorf("format '%d' if not supported", data[2])
+	return nil, fmt.Errorf("format '%d' if not supported", data[2])
 }
 
 func scanDevice(device gatt.Device, output chan Measurement) {

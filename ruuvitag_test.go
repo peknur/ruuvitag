@@ -11,7 +11,9 @@ func TestIsRuuvitag(t *testing.T) {
 
 // https://github.com/ruuvi/ruuvi-sensor-protocols/blob/master/dataformat_03.md
 func TestDataFormat3(t *testing.T) {
-	data, err := hex.DecodeString("990403291A1ECE1EFC18F94202CA0B53")
+	// min 0x0300FF6300008001800180010000
+	// max 0x03FF7F63FFFF7FFF7FFF7FFFFFFF
+	data, err := hex.DecodeString("99040300FF6300008001800180010000")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -19,20 +21,28 @@ func TestDataFormat3(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if m.Pressure != 52766 {
-		t.Errorf("m.Pressure = %d; want 52766", m.Pressure)
+	if m.Pressure() != 50000 {
+		t.Errorf("Pressure = %d; want 50000", m.Pressure())
 	}
-	if m.Temperature != 26 {
-		t.Errorf("m.Temperature = %d; want 26", m.Temperature)
+	if m.Temperature() != -127.99 {
+		t.Errorf("Temperature = %.2f; want -127.99", m.Temperature())
 	}
-	if m.TemperatureFraction != 30 {
-		t.Errorf("m.TemperatureFctorure = %d; want 30", m.TemperatureFraction)
+	if m.Humidity() != 0.0 {
+		t.Errorf("Humidity = %.2f; want 0.0", m.Humidity())
 	}
-	if m.Humidity != 41 {
-		t.Errorf("m.Humidity = %d; want 41", m.Humidity)
+	if m.BatteryVoltage() != 0.000 {
+		t.Errorf("BatteryVoltage = %.3f; want 2899", m.BatteryVoltage())
 	}
-	if m.BatteryVoltage != 2899 {
-		t.Errorf("m.Humidity = %d; want 2899", m.BatteryVoltage)
+	if m.AccelerationX() != -32.767 {
+		t.Errorf("AccelerationX = %.3f; want -32.767", m.AccelerationX())
+	}
+
+	if m.AccelerationY() != -32.767 {
+		t.Errorf("AccelerationY = %.3f; want -32.767", m.AccelerationY())
+	}
+
+	if m.AccelerationZ() != -32.767 {
+		t.Errorf("AccelerationZ = %.3f; want -32.767", m.AccelerationZ())
 	}
 }
 
