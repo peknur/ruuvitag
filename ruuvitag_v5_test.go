@@ -59,7 +59,7 @@ func TestDataFormat5MinimumValues(t *testing.T) {
 	if m.Humidity() != 0.000 {
 		t.Errorf("Humidity = %.3f; want 0.000", m.Humidity())
 	}
-	if m.BatteryVoltage() != -3.646 {
+	if m.BatteryVoltage() != 1.600 {
 		t.Errorf("BatteryVoltage = %.3f; want -3.646", m.BatteryVoltage())
 	}
 	if m.AccelerationX() != -32.767 {
