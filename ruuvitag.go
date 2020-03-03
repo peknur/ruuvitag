@@ -16,14 +16,25 @@ var manufacturerDataID uint16 = 0x0499
 type Measurement interface {
 	DeviceID() string
 	Format() uint8
-	Humidity() float64
-	Temperature() float64
+	Humidity() float32
+	Temperature() float32
 	Pressure() uint32
-	AccelerationX() float64
-	AccelerationY() float64
-	AccelerationZ() float64
-	BatteryVoltage() float64
+	AccelerationX() float32
+	AccelerationY() float32
+	AccelerationZ() float32
+	BatteryVoltage() float32
 	Timestamp() time.Time
+}
+
+func msbSignedByteToInt8(value byte) int8 {
+	sign := value >> 7
+	var v int8
+	if sign == 1 {
+		v = -int8(value >> 1)
+	} else {
+		v = int8(value >> 0)
+	}
+	return v
 }
 
 func init() {
@@ -40,7 +51,9 @@ func NewMeasurement(ID string, data []byte) (Measurement, error) {
 	// switch data format
 	switch data[2] {
 	case 3:
-		return newDataFormat3(ID, data)
+		return NewDataFormat3(ID, data)
+	case 5:
+		return NewDataFormat5(ID, data)
 	}
 	return nil, fmt.Errorf("format '%d' if not supported", data[2])
 }

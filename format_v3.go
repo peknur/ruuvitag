@@ -6,7 +6,8 @@ import (
 	"time"
 )
 
-// DataFormat3 (also known as RAWv1) measurement
+// dataFormat3 (also known as RAWv1) measurement
+// @see https://github.com/ruuvi/ruuvi-sensor-protocols/blob/master/dataformat_03.md
 type dataFormat3 struct {
 	deviceID            string
 	format              uint8
@@ -28,35 +29,44 @@ func (f *dataFormat3) DeviceID() string {
 func (f *dataFormat3) Format() uint8 {
 	return f.format
 }
-func (f *dataFormat3) Humidity() float64 {
-	return float64(f.humidity) / 2
+
+func (f *dataFormat3) Humidity() float32 {
+	return float32(f.humidity) / 2
 }
 
-func (f *dataFormat3) Temperature() float64 {
-	return float64(f.temperature) + float64(f.temperatureFraction)/100
+func (f *dataFormat3) Temperature() float32 {
+	if f.temperature < 0 {
+		return float32(f.temperature) - (float32(f.temperatureFraction) / 100)
+	}
+	return float32(f.temperature) + (float32(f.temperatureFraction) / 100)
 }
 
 func (f *dataFormat3) Pressure() uint32 {
 	return uint32(f.pressure) + 50000
 }
-func (f *dataFormat3) AccelerationX() float64 {
-	return float64(f.accelerationX / 1000)
+
+func (f *dataFormat3) AccelerationX() float32 {
+	return float32(f.accelerationX) / 1000
 }
-func (f *dataFormat3) AccelerationY() float64 {
-	return float64(f.accelerationY) / 1000
+
+func (f *dataFormat3) AccelerationY() float32 {
+	return float32(f.accelerationY) / 1000
 }
-func (f *dataFormat3) AccelerationZ() float64 {
-	return float64(f.accelerationZ) / 1000
+
+func (f *dataFormat3) AccelerationZ() float32 {
+	return float32(f.accelerationZ) / 1000
 }
-func (f *dataFormat3) BatteryVoltage() float64 {
-	return float64(f.batteryVoltage)
+
+func (f *dataFormat3) BatteryVoltage() float32 {
+	return float32(f.batteryVoltage) / 1000
 }
+
 func (f *dataFormat3) Timestamp() time.Time {
 	return f.Timestamp()
 }
 
-// Data format 3 https://github.com/ruuvi/ruuvi-sensor-protocols/blob/master/broadcast_formats.md
-func newDataFormat3(ID string, data []byte) (Measurement, error) {
+// NewDataFormat3 https://github.com/ruuvi/ruuvi-sensor-protocols/blob/master/broadcast_formats.md
+func NewDataFormat3(ID string, data []byte) (Measurement, error) {
 	if len(data) != 16 {
 		return nil, fmt.Errorf("manufacturer data lenght mismatch")
 	}
@@ -65,13 +75,13 @@ func newDataFormat3(ID string, data []byte) (Measurement, error) {
 		deviceID:            ID,
 		format:              data[2],
 		humidity:            uint8(data[3]),
-		temperature:         int8(data[4]),
+		temperature:         msbSignedByteToInt8(data[4]),
 		temperatureFraction: uint8(data[5]),
-		pressure:            uint16(binary.BigEndian.Uint16(data[6:8])),
+		pressure:            binary.BigEndian.Uint16(data[6:8]),
 		accelerationX:       int16(binary.BigEndian.Uint16(data[8:10])),
 		accelerationY:       int16(binary.BigEndian.Uint16(data[10:12])),
 		accelerationZ:       int16(binary.BigEndian.Uint16(data[12:14])),
-		batteryVoltage:      uint16(binary.BigEndian.Uint16(data[14:16])),
+		batteryVoltage:      binary.BigEndian.Uint16(data[14:16]),
 		timestamp:           time.Now(),
 	}
 	return &m, nil
