@@ -68,8 +68,8 @@ func (f *dataFormat5) Timestamp() time.Time {
 	return f.Timestamp()
 }
 
-func (f *dataFormat5) TXPower() uint8 {
-	return uint8(0)
+func (f *dataFormat5) TXPower() int8 {
+	return -40 + (int8(f.txPower) * 2)
 }
 
 // NewDataFormat5 https://github.com/ruuvi/ruuvi-sensor-protocols/blob/master/broadcast_formats.md

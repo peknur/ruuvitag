@@ -23,6 +23,7 @@ type Measurement interface {
 	AccelerationY() float32
 	AccelerationZ() float32
 	BatteryVoltage() float32
+	TXPower() int8
 	Timestamp() time.Time
 }
 

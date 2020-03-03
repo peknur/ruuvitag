@@ -38,6 +38,10 @@ func TestDataFormat5MaximumValues(t *testing.T) {
 	if m.AccelerationZ() != 32.767 {
 		t.Errorf("AccelerationZ = %.3f; want 32.767", m.AccelerationZ())
 	}
+
+	if m.TXPower() != 20 {
+		t.Errorf("TXPower = %d; want 20", m.TXPower())
+	}
 }
 
 func TestDataFormat5MinimumValues(t *testing.T) {
@@ -72,5 +76,9 @@ func TestDataFormat5MinimumValues(t *testing.T) {
 
 	if m.AccelerationZ() != -32.767 {
 		t.Errorf("AccelerationZ = %.3f; want -32.767", m.AccelerationZ())
+	}
+
+	if m.TXPower() != -40 {
+		t.Errorf("TXPower = %d; want -40", m.TXPower())
 	}
 }
