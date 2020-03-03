@@ -42,6 +42,14 @@ func TestDataFormat5MaximumValues(t *testing.T) {
 	if m.TXPower() != 20 {
 		t.Errorf("TXPower = %d; want 20", m.TXPower())
 	}
+
+	if m.MovementCounter() != 254 {
+		t.Errorf("MovementCounter = %d; want 254", m.MovementCounter())
+	}
+
+	if m.Sequence() != 65534 {
+		t.Errorf("MovementCounter = %d; want 65534", m.Sequence())
+	}
 }
 
 func TestDataFormat5MinimumValues(t *testing.T) {
@@ -80,5 +88,13 @@ func TestDataFormat5MinimumValues(t *testing.T) {
 
 	if m.TXPower() != -40 {
 		t.Errorf("TXPower = %d; want -40", m.TXPower())
+	}
+
+	if m.MovementCounter() != 0 {
+		t.Errorf("MovementCounter = %d; want 0", m.MovementCounter())
+	}
+
+	if m.Sequence() != 0 {
+		t.Errorf("MovementCounter = %d; want 0", m.Sequence())
 	}
 }

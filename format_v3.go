@@ -69,6 +69,14 @@ func (f *dataFormat3) TXPower() int8 {
 	return 0
 }
 
+func (f *dataFormat3) MovementCounter() uint8 {
+	return 0
+}
+
+func (f *dataFormat3) Sequence() uint16 {
+	return 0
+}
+
 // NewDataFormat3 https://github.com/ruuvi/ruuvi-sensor-protocols/blob/master/broadcast_formats.md
 func NewDataFormat3(ID string, data []byte) (Measurement, error) {
 	if len(data) != 16 {

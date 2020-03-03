@@ -10,20 +10,20 @@ import (
 // dataFormat5 (also known as RAWv2) measurement
 // @see https://github.com/ruuvi/ruuvi-sensor-protocols/blob/master/dataformat_05.md
 type dataFormat5 struct {
-	deviceID       string
-	format         uint8
-	humidity       uint16
-	temperature    int16
-	pressure       uint16
-	accelerationX  int16
-	accelerationY  int16
-	accelerationZ  int16
-	batteryVoltage uint16
-	txPower        uint8
-	movement       uint8
-	sequence       uint16
-	mac            string
-	timestamp      time.Time
+	deviceID        string
+	format          uint8
+	humidity        uint16
+	temperature     int16
+	pressure        uint16
+	accelerationX   int16
+	accelerationY   int16
+	accelerationZ   int16
+	batteryVoltage  uint16
+	txPower         uint8
+	movementCounter uint8
+	sequence        uint16
+	mac             string
+	timestamp       time.Time
 }
 
 func (f *dataFormat5) DeviceID() string {
@@ -72,6 +72,14 @@ func (f *dataFormat5) TXPower() int8 {
 	return -40 + (int8(f.txPower) * 2)
 }
 
+func (f *dataFormat5) MovementCounter() uint8 {
+	return f.movementCounter
+}
+
+func (f *dataFormat5) Sequence() uint16 {
+	return f.sequence
+}
+
 // NewDataFormat5 https://github.com/ruuvi/ruuvi-sensor-protocols/blob/master/broadcast_formats.md
 func NewDataFormat5(ID string, data []byte) (Measurement, error) {
 	if len(data) != 26 {
@@ -89,20 +97,20 @@ func NewDataFormat5(ID string, data []byte) (Measurement, error) {
 	}
 
 	m := dataFormat5{
-		deviceID:       ID,
-		format:         data[2],
-		temperature:    int16(binary.BigEndian.Uint16(data[3:5])),
-		humidity:       binary.BigEndian.Uint16(data[5:7]),
-		pressure:       binary.BigEndian.Uint16(data[7:9]),
-		accelerationX:  int16(binary.BigEndian.Uint16(data[9:11])),
-		accelerationY:  int16(binary.BigEndian.Uint16(data[11:13])),
-		accelerationZ:  int16(binary.BigEndian.Uint16(data[13:15])),
-		batteryVoltage: uint16(battery),
-		txPower:        uint8(tx),
-		movement:       uint8(data[17]),
-		sequence:       binary.BigEndian.Uint16(data[18:20]),
-		mac:            string(data[20:]),
-		timestamp:      time.Now(),
+		deviceID:        ID,
+		format:          data[2],
+		temperature:     int16(binary.BigEndian.Uint16(data[3:5])),
+		humidity:        binary.BigEndian.Uint16(data[5:7]),
+		pressure:        binary.BigEndian.Uint16(data[7:9]),
+		accelerationX:   int16(binary.BigEndian.Uint16(data[9:11])),
+		accelerationY:   int16(binary.BigEndian.Uint16(data[11:13])),
+		accelerationZ:   int16(binary.BigEndian.Uint16(data[13:15])),
+		batteryVoltage:  uint16(battery),
+		txPower:         uint8(tx),
+		movementCounter: uint8(data[17]),
+		sequence:        binary.BigEndian.Uint16(data[18:20]),
+		mac:             string(data[20:]),
+		timestamp:       time.Now(),
 	}
 	return &m, nil
 }

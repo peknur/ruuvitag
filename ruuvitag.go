@@ -24,6 +24,8 @@ type Measurement interface {
 	AccelerationZ() float32
 	BatteryVoltage() float32
 	TXPower() int8
+	MovementCounter() uint8
+	Sequence() uint16
 	Timestamp() time.Time
 }
 
