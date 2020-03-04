@@ -7,7 +7,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/paypal/gatt"
+	"github.com/peknur/gatt"
 )
 
 var manufacturerDataID uint16 = 0x0499
@@ -40,12 +40,10 @@ func msbSignedByteToInt8(value byte) int8 {
 	return v
 }
 
-func init() {
-	// Discard log message from gatt module
-	log.SetOutput(ioutil.Discard)
-}
-
 func isRuuviDevice(data []byte) bool {
+	if len(data) < 2 {
+		return false
+	}
 	return binary.LittleEndian.Uint16(data[0:2]) == manufacturerDataID
 }
 
@@ -92,4 +90,9 @@ func Scan(output chan Measurement) error {
 	}
 	go scanDevice(device, output)
 	return nil
+}
+
+func init() {
+	// Discard log message from gatt module
+	log.SetOutput(ioutil.Discard)
 }

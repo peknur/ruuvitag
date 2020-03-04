@@ -82,7 +82,9 @@ func NewDataFormat3(ID string, data []byte) (Measurement, error) {
 	if len(data) != 16 {
 		return nil, fmt.Errorf("manufacturer data lenght mismatch")
 	}
-
+	if data[2] != 3 {
+		return nil, fmt.Errorf("data format mismatch (%d)", data[2])
+	}
 	m := dataFormat3{
 		deviceID:            ID,
 		format:              data[2],

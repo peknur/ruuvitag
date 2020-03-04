@@ -5,10 +5,6 @@ import (
 	"testing"
 )
 
-func TestIsRuuvitag(t *testing.T) {
-
-}
-
 // https://github.com/ruuvi/ruuvi-sensor-protocols/blob/master/dataformat_03.md
 func TestDataFormat3MinimumValues(t *testing.T) {
 	data, err := hex.DecodeString("99040300FF6300008001800180010000")

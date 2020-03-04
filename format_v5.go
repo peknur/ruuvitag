@@ -85,7 +85,9 @@ func NewDataFormat5(ID string, data []byte) (Measurement, error) {
 	if len(data) != 26 {
 		return nil, fmt.Errorf("manufacturer data lenght (%d) mismatch", len(data))
 	}
-
+	if data[2] != 5 {
+		return nil, fmt.Errorf("data format mismatch (%d)", data[2])
+	}
 	powerBits := fmt.Sprintf("%08b%08b", data[15], data[16])
 	battery, err := strconv.ParseUint(powerBits[:11], 2, 16)
 	if err != nil {
