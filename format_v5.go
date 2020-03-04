@@ -65,7 +65,7 @@ func (f *dataFormat5) BatteryVoltage() float32 {
 }
 
 func (f *dataFormat5) Timestamp() time.Time {
-	return f.Timestamp()
+	return f.timestamp
 }
 
 func (f *dataFormat5) TXPower() int8 {
