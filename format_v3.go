@@ -100,3 +100,14 @@ func NewDataFormat3(ID string, data []byte) (Measurement, error) {
 	}
 	return &m, nil
 }
+
+func msbSignedByteToInt8(value byte) int8 {
+	sign := value >> 7
+	var v int8
+	if sign == 1 {
+		v = -int8(value >> 1)
+	} else {
+		v = int8(value >> 0)
+	}
+	return v
+}

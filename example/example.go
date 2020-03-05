@@ -3,19 +3,24 @@ package main
 import (
 	"log"
 	"os"
+	"time"
 
 	"github.com/peknur/ruuvitag"
 )
 
 func main() {
 	var logger = log.New(os.Stdout, "", log.LstdFlags)
-	output := make(chan ruuvitag.Measurement, 10)
-	err := ruuvitag.Scan(output)
+	scanner, err := ruuvitag.NewScanner(10)
 	if err != nil {
-		close(output)
 		logger.Fatal(err)
 	}
-	for {
+	output := scanner.Start()
+	go func() {
+		time.Sleep(10 * time.Second)
+		logger.Printf("stopped scanner after 10 sec.")
+		scanner.Stop()
+	}()
+	for i := 1; i <= 100; i++ {
 		data, ok := <-output
 		if ok == false {
 			logger.Println("scanner closed channel")
