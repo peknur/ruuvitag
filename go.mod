@@ -4,5 +4,5 @@ go 1.13
 
 require (
 	github.com/paypal/gatt v0.0.0-20151011220935-4ae819d591cf // indirect
-	github.com/peknur/gatt v0.0.0-20200306193100-90b039124b05
+	github.com/peknur/gatt v0.0.0-20200306192256-4702dffa7720
 )
