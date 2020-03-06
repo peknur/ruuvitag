@@ -42,26 +42,6 @@ func NewMeasurement(ID string, data []byte) (Measurement, error) {
 	return nil, fmt.Errorf("format '%d' if not supported", data[2])
 }
 
-func scanDevice(device gatt.Device, output chan Measurement) {
-	device.Handle(gatt.PeripheralDiscovered(func(p gatt.Peripheral, a *gatt.Advertisement, rssi int) {
-		if isRuuviDevice(a.ManufacturerData) {
-			data, err := NewMeasurement(p.ID(), a.ManufacturerData)
-			if err == nil && output != nil {
-				output <- data
-			}
-		}
-	}))
-	device.Init(func(d gatt.Device, s gatt.State) {
-		switch s {
-		case gatt.StatePoweredOn:
-			d.Scan([]gatt.UUID{}, true)
-		default:
-			d.StopScanning()
-			close(output)
-		}
-	})
-}
-
 func isRuuviDevice(data []byte) bool {
 	if len(data) < 2 {
 		return false
