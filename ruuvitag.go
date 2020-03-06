@@ -3,8 +3,6 @@ package ruuvitag
 import (
 	"encoding/binary"
 	"fmt"
-	"io/ioutil"
-	"log"
 	"sync"
 	"time"
 
@@ -124,9 +122,4 @@ func NewScanner(bufferSize int) (Scanner, error) {
 		}
 	})
 	return instance, err
-}
-
-func init() {
-	// Discard log message from gatt module
-	log.SetOutput(ioutil.Discard)
 }
