@@ -107,9 +107,9 @@ func (s *scanner) Start() chan Measurement {
 
 var once sync.Once
 
-// NewScanner takes output buffer size as parameter
+// OpenScanner takes output buffer size as parameter
 // and creates new Scanner singleton
-func NewScanner(bufferSize int) (Scanner, error) {
+func OpenScanner(bufferSize int) (Scanner, error) {
 	var err error
 	once.Do(func() {
 		var device gatt.Device
