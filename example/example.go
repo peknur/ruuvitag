@@ -10,7 +10,7 @@ import (
 
 func main() {
 	var logger = log.New(os.Stdout, "", log.LstdFlags)
-	scanner, err := ruuvitag.NewScanner(10)
+	scanner, err := ruuvitag.OpenScanner(10)
 	if err != nil {
 		logger.Fatal(err)
 	}
