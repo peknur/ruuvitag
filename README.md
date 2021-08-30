@@ -26,7 +26,7 @@ Stopping scanner will stop BT scanning and closes output channel
 scanner.Stop()
 ```
 
-Process measurement from channel
+Read incoming RuuviTag measurements from channel
 ```go
 for {
     data, ok := <-output
